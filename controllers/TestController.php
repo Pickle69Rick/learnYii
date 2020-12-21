@@ -27,6 +27,17 @@ class TestController extends Controller
 
         $model = new EntryForm();
 
+        if($model->load(\Yii::$app->request->post()) && $model->validate()) {
+
+            if (\Yii::$app->request->isPjax) {
+                \Yii::$app->session->setFlash('success', 'Данные приняты через Pjax');
+                $model = new EntryForm();
+            } else {
+                \Yii::$app->session->setFlash('success', 'Данные приняты стандартно');
+                return $this->refresh();
+            }
+        }
+
 
         return $this->render('index', [
             'model' => $model,
